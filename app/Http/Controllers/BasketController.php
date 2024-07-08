@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class BasketController extends Controller
@@ -18,7 +19,7 @@ class BasketController extends Controller
 
     public function basketConfirm(Request $request)
     {
-/*        $orderId = session('orderId');
+        $orderId = session('orderId');
         if (is_null($orderId)) {
             return redirect()->route('index');
         }
@@ -31,7 +32,7 @@ class BasketController extends Controller
             session()->flash('warning', 'Случилась ошибка');
         }
 
-        return redirect()->route('index');*/
+        return redirect()->route('index');
     }
 
     public function basketPlace()
@@ -60,6 +61,9 @@ class BasketController extends Controller
         } else {
             $order->products()->attach($productId);
         }
+        $product = Product::find($productId);
+
+        session()->flash('success', 'Добавлен товар ' . $product->name);
 
         return redirect()->route('basket');
     }
@@ -81,6 +85,11 @@ class BasketController extends Controller
                 $pivotRow->update();
             }
         }
+
+        $product = Product::find($productId);
+
+        session()->flash('warning', 'Удален товар  ' . $product->name);
+
 
         return redirect()->route('basket');
     }
